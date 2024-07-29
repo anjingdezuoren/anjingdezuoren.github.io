@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+<body>
+    <header>
+        <div class="traffic-light"><img src="logolist.jpg" alt="LOGO图片"></div>
+        <nav>
+            <a class="fa fa-home" href="index.html"></a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="搜索...">
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="left-column">
+            <div class="today-future-tasks">
+                <h2>今日和未来事项</h2>
+                <ul>
+                    <li class="task-category" data-filter="今日事项"><i class="fa fa-calendar"></i> 今日事项 <span id="todayTasksCount">0</span></li>
+                    <li class="task-category" data-filter="未来事项"><i class="fa fa-calculator"></i> 未来事项 <span id="futureTasksCount">0</span></li>
+                </ul>
+            </div>
+            <div class="personal-important-tasks">
+                <h2>我的个人事项</h2>
+                <ul>
+                    <li class="task-category" data-filter="个人事项"><i class="fa fa-user-o"></i> 个人事项 <span id="personalTasksCount">0</span></li>
+                    <li class="task-category" data-filter="重要事项"><i class="fa fa-exclamation-circle"></i> 重要事项 <span id="importantTasksCount">0</span></li>
+                </ul>
+            </div>
+            <div class="completed-tasks">
+                <h2>已完成事项</h2>
+                <ul>
+                    <li class="task-category" data-filter="已完成事项"><i class="fa fa-calendar-check-o"></i> 已完成事项 <span id="completedTasksCount">0</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="todo-list">
+                <h1>TodoList</h1>
+                <input type="text" id="taskInput" placeholder="添加新事项">
+                <input type="date" id="taskDate">
+                <button id="addTaskButton">添加</button>
+                <button id="clearCompletedButton">删除所有已完成事项</button>
+                <ul id="taskList"></ul>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
