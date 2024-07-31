@@ -1,56 +1,96 @@
+<!-- 声明文档类型为HTML5 -->
 <!DOCTYPE html>
+<!-- 定义html文档根元素，语言设置为中文 -->
 <html lang="zh-CN">
+<!-- 定义head元素，包含文档的元信息，如标题、样式表、脚本等 -->
 <head>
+    <!-- 设置文档的字符编码为 UTF-8 -->
     <meta charset="UTF-8">
+    <!-- 设置文档的视口，使其适应不同设备的屏幕大小 ---->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 设置文档的标题 -->
     <title>TodoList</title>
+    <!-- 引用外部CSS样式表 -->
     <link rel="stylesheet" href="styles.css">
+    <!-- 引用Font Awesome图标库 -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 </head>
+<!-- 定义文档的主体 -->
 <body>
+    <!-- 定义header元素，即头部内容，包含logo图片、导航栏、搜索栏等 -->
     <header>
+        <!-- 包含LOGO图片的容器，并设置其样式，定义logo图片 -->
         <div class="traffic-light"><img src="logolist.jpg" alt="LOGO图片"></div>
+        <!-- 定义导航链接的部分，并设置其样式 -->
         <nav>
+            <!-- 定义一个返回首页的链接，使用Font Awesome的home图标-->
             <a class="fa fa-home" href="index.html"></a>
+            <!-- 定义搜索栏的容器 -->
             <div class="search-bar">
+                <!-- 定义搜索栏的输入框，并设置其样式 -->
                 <input type="text" id="searchInput" placeholder="搜索...">
             </div>
         </nav>
     </header>
+    <!-- 定义main元素，即主体内容，包含左右两列内容 -->
     <main>
+        <!-- 定义左侧栏的容器，设置其样式，包含今日、未来、个人、重要、已完成事项的分类列表 -->
         <div class="left-column">
+            <!-- 定义今日和未来事项的容器，并设置其样式，定义今日、未来事项的分类列表，并设置其样式 -->
             <div class="today-future-tasks">
+                <!--定义标题-->
                 <h2>今日和未来事项</h2>
+                <!--定义今日和未来事项的无序列表-->
                 <ul>
+                    <!--定义今日事项的列表项，包含了今日事项的图标和今日事项的任务数量，并设置样式-->
                     <li class="task-category" data-filter="今日事项"><i class="fa fa-calendar"></i> 今日事项 <span id="todayTasksCount">0</span></li>
+                    <!--定义未来事项的列表项，包含了未来事项的图标和未来事项的任务数量，并设置样式-->
                     <li class="task-category" data-filter="未来事项"><i class="fa fa-calculator"></i> 未来事项 <span id="futureTasksCount">0</span></li>
                 </ul>
             </div>
+            <!-- 定义个人和重要事项的容器，并设置其样式，定义个人和重要事项的分类列表，并设置其样式 -->
             <div class="personal-important-tasks">
+                <!--定义标题-->
                 <h2>我的个人事项</h2>
+                <!--定义个人和重要事项的无序列表-->
                 <ul>
+                    <!--定义个人事项的列表项，包含了个人事项的图标和个人事项的任务数量，并设置样式-->
                     <li class="task-category" data-filter="个人事项"><i class="fa fa-user-o"></i> 个人事项 <span id="personalTasksCount">0</span></li>
+                    <!--定义重要事项的列表项，包含了重要事项的图标和重要事项的任务数量，并设置样式-->
                     <li class="task-category" data-filter="重要事项"><i class="fa fa-exclamation-circle"></i> 重要事项 <span id="importantTasksCount">0</span></li>
                 </ul>
             </div>
+            <!-- 定义已完成事项的容器，并设置其样式，定义已完成事项的分类列表，并设置其样式 -->
             <div class="completed-tasks">
+                <!--定义标题-->
                 <h2>已完成事项</h2>
+                <!--定义已完成事项的无序列表-->
                 <ul>
+                    <!--定义已完成事项的列表项，包含了已完成事项的图标和已完成事项的任务数量，并设置样式-->
                     <li class="task-category" data-filter="已完成事项"><i class="fa fa-calendar-check-o"></i> 已完成事项 <span id="completedTasksCount">0</span></li>
                 </ul>
             </div>
         </div>
+        <!-- 定义右侧栏的容器，设置其样式,包含添加任务的输入框、日期选择器、添加任务按钮、删除所有已完成事项按钮、任务列表 -->
         <div class="right-column">
+            <!-- 定义todolist的容器 -->
             <div class="todo-list">
+                <!-- 定义标题 -->
                 <h1>TodoList</h1>
+                <!--定义一个输入框，用于添加新事项，并设置其样式-->
                 <input type="text" id="taskInput" placeholder="添加新事项">
+                <!--定义一个日期选择器，用于选择任务的日期，并设置其样式-->
                 <input type="date" id="taskDate">
+                <!--定义一个添加任务按钮，用于添加新事项，并设置其样式-->
                 <button id="addTaskButton">添加</button>
+                <!--定义一个删除所有已完成事项按钮，用于删除所有已完成事项，并设置其样式-->
                 <button id="clearCompletedButton">删除所有已完成事项</button>
+                <!--定义一个无序列表，用于显示所有事项，并设置其样式-->
                 <ul id="taskList"></ul>
             </div>
         </div>
     </main>
+    <!-- 引用外部JavaScript脚本文件 -->
     <script src="script.js"></script>
 </body>
 </html>
