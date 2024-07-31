@@ -277,6 +277,8 @@ document.addEventListener('DOMContentLoaded', function() {
             li.querySelector('.importantButton').addEventListener('click', () => toggleImportant(index));
             taskList.appendChild(li);
         });
+        //移除所有左侧链接的选中状态
+        updateSelectedCategory(null);
     }
 
     // 处理fa fa-home按键，为homeButton添加点击事件监听器，当点击时执行回调函数。
