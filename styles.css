@@ -15,6 +15,12 @@ header {
     padding: 10px 20px;/*设置内边距上下10px左右20px*/
     background-color: #f8f9fa;/*设置背景颜色*/
     border-bottom: 1px solid #f8f9fa;/*设置底部边框 1px 实线 */
+    position: fixed; /* 固定头部栏位置 */
+    top: 0; /* 头部栏距离顶部0px */
+    left: 0; /* 头部栏距离左侧0px */
+    right: 0; /* 头部栏距离右侧0px */
+    z-index: 1000; /* 头部栏层级为1000 */
+    height:60px; /* 头部栏高度为60px */
 }
 /*logo的样式*/
 .traffic-light {
@@ -60,6 +66,8 @@ nav a:hover {
 main {
     display: flex;/*使用flex布局*/
     flex: 1;/*设置flex为1*/
+    margin-top: 60px;/*设置顶部外边距为60px*/
+    overflow: hidden; /*隐藏溢出内容*/
 }
 /*左侧栏样式*/
 .left-column {
@@ -67,6 +75,12 @@ main {
     padding: 20px;/*设置内边距为20px*/
     border-right: 1px solid #dee2e6;/*设置右边框1px实线*/
     background-color: #f0f0f0; /* 浅灰色背景 */
+    position:fixed;/*固定定位*/
+    overflow-y:auto; /*允许滚动条*/
+    top:60px;/*距离顶部60px*/
+    bottom:0;/*距离底部0px*/
+    left:0;/*距离左侧0px*/
+    width:300px;/*宽度300px*/
 }
 /*左侧栏整个列表的样式*/
 .left-column ul {
@@ -115,6 +129,9 @@ main {
 .right-column {
     width: 70%;/*设置宽度为70%*/
     padding: 20px;/*设置内边距为20px*/
+    margin-left:350px;/*设置左边距为350px*/
+    flex-grow:1;/*设置宽度为100%*/
+    overflow: auto; /* 允许滚动条 */
 }
 /*右侧栏的内容样式 */
 .todo-list {
@@ -240,3 +257,4 @@ ul {
 #clearCompletedButton {
     margin-left: 10px;/*设置左边距为10px*/
 }
+
