@@ -24,14 +24,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentFilter = 'all';
 
     // 初始化事项列表，定义一个initTasks函数用于初始化事项列表
-    function initTasks() {
-        // 从本地存储获取事项列表，如果没有则初始化为空数组
-        tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        // 调用renderTasks函数，根据当前过滤条件渲染事项列表
-        renderTasks(currentFilter);
-        // 调用updateCounts函数更新左侧数量计数
-        updateCounts();
-    }
+function initTasks() {
+    // 从本地存储获取事项列表，如果没有则初始化为空数组
+    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    // 为每个任务生成唯一ID
+    tasks.forEach((task, index) => task.id = index);
+    // 调用renderTasks函数，根据当前过滤条件渲染事项列表
+    renderTasks(currentFilter);
+    // 调用updateCounts函数更新左侧数量计数
+    updateCounts();
+}
 
     // 渲染事项列表，定义一个renderTasks函数用于根据过滤条件渲染事项列表
     function renderTasks(filter) {
@@ -66,83 +68,112 @@ document.addEventListener('DOMContentLoaded', function() {
             //重要按钮，根据任务的重要状态添加不同的类名（重要为 important，不重要为 not-important）。
             li.innerHTML = `
                 <div class="task-content">
-                    <i class="fa ${task.completed ? 'fa-toggle-on' : 'fa-toggle-off'} toggle-icon" data-index="${index}"></i>
+                    <i class="fa ${task.completed ? 'fa-toggle-on' : 'fa-toggle-off'} toggle-icon" data-id="${task.id}"></i>
                     <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
                 </div>
                 <div class="task-date">${task.date}</div>
                 <div class="task-actions">
-                    <button class="deleteButton">删除</button>
-                    <button class="importantButton ${task.important ? 'important' : 'not-important'}">重要</button>
+                    <button class="deleteButton" data-id="${task.id}">删除</button>
+                    <button class="importantButton ${task.important ? 'important' : 'not-important'}" data-id="${task.id}">重要</button>
                 </div>
             `;
-            // 为toggle-icon添加点击事件，点击时调用toggleComplete函数切换任务完成状态
-            li.querySelector('.toggle-icon').addEventListener('click', () => toggleComplete(index));
+            // 为toggle-icon添加点击事件，点击时调用toggleComplete函数切换事项完成状态
+            li.querySelector('.toggle-icon').addEventListener('click', () => toggleComplete(task.id));
             // 为deleteButton添加点击事件，点击时调用deleteTask函数删除当前事项
-            li.querySelector('.deleteButton').addEventListener('click', () => deleteTask(index));
+            li.querySelector('.deleteButton').addEventListener('click', () => deleteTask(task.id));
             // 为importantButton添加点击事件，点击时调用toggleImportant函数切换任务重要状态
-            li.querySelector('.importantButton').addEventListener('click', () => toggleImportant(index));
+            li.querySelector('.importantButton').addEventListener('click', () => toggleImportant(task.id));
             // 将li元素添加到事项列表taskList中
             taskList.appendChild(li);
         });
     }
 
+
     // 添加事项，定义一个addTask函数用于添加新事项
     function addTask() {
-        //获取事项输入框的值，并去除前后空格，赋值给常量text
-        const text = taskInput.value.trim();
-        //获取事项日期框的值，赋值给常量date
-        const date = taskDate.value;
-        //如果输入框有值，则创建新事项对象，并将其添加到tasks数组中，并保存到本地存储，然后渲染事项列表，更新左侧数量计数
-        if (text) {
-            //将新事项对象（包含事项文本、日期、未完成状态和非重要状态）添加到事项数组 tasks 中
-            tasks.push({ text, date, completed: false, important: false });
-            //调用saveTasks函数，将事项数组tasks保存到本地存储
-            saveTasks();
-            //调用renderTasks函数，根据当前过滤条件渲染事项列表
+    // 获取事项输入框的值，并去除前后空格，赋值给常量text
+    const text = taskInput.value.trim();
+    // 获取事项日期框的值，赋值给常量date
+    const date = taskDate.value;
+    // 如果输入框有值，则创建新事项对象，并将其添加到tasks数组中，并保存到本地存储，然后渲染事项列表，更新左侧数量计数
+    if (text) {
+        // 将新事项对象（包含事项文本、日期、未完成状态和非重要状态）添加到事项数组 tasks 中
+        const newTask = { id: tasks.length, text, date, completed: false, important: false };
+        tasks.push(newTask);
+        // 调用saveTasks函数，将事项数组tasks保存到本地存储
+        saveTasks();
+        // 调用renderTasks函数，根据当前过滤条件渲染事项列表
+        renderTasks(currentFilter);
+        // 调用updateCounts函数更新左侧事项数量计数
+        updateCounts();
+        // 清空输入框和日期
+        taskInput.value = '';
+        taskDate.value = '';
+    }
+}
+
+    // 删除事项，定义一个deleteTask函数用于删除指定ID的事项
+    function deleteTask(id, isSearchResult = false) {
+    // 从tasks数组中删除指定ID的事项
+    tasks = tasks.filter(task => task.id !== id);
+    // 调用saveTasks函数，将事项数组tasks保存到本地存储
+    saveTasks();
+    // 如果是搜索结果中的任务，重新渲染搜索结果
+    if (isSearchResult) {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(searchTerm));
+        renderSearchResults(filteredTasks);
+    } else {
+        // 调用renderTasks函数，根据当前过滤条件渲染事项列表
+        renderTasks(currentFilter);
+    }
+    // 调用updateCounts函数更新左侧事项数量计数
+    updateCounts();
+}
+
+    // 切换事项完成状态，定义一个toggleComplete函数用于切换指定ID的事项的完成状态
+    function toggleComplete(id, isSearchResult = false) {
+    // 根据ID获取当前事项对象，并根据其完成状态取反，赋值给任务对象的 completed 属性
+    const task = tasks.find(task => task.id === id);
+    if (task) {
+        task.completed = !task.completed;
+        // 调用saveTasks函数，将事项数组tasks保存到本地存储
+        saveTasks();
+        // 如果是搜索结果中的任务，重新渲染搜索结果
+        if (isSearchResult) {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(searchTerm));
+            renderSearchResults(filteredTasks);
+        } else {
+            // 调用renderTasks函数，根据当前过滤条件渲染事项列表
             renderTasks(currentFilter);
-            //调用updateCounts函数更新左侧事项数量计数
-            updateCounts();
-            //清空输入框和日期
-            taskInput.value = '';
-            taskDate.value = '';
         }
-    }
-
-    // 删除事项，定义一个deleteTask函数用于删除指定索引的事项
-    function deleteTask(index) {
-        //从tasks数组中删除指定索引的事项
-        tasks.splice(index, 1);
-        //调用saveTasks函数，将事项数组tasks保存到本地存储
-        saveTasks();
-        //调用renderTasks函数，根据当前过滤条件渲染事项列表
-        renderTasks(currentFilter);
-        //调用updateCounts函数更新左侧事项数量计数
+        // 调用updateCounts函数更新左侧事项数量计数
         updateCounts();
     }
+}
 
-    // 切换事项完成状态，定义一个toggleComplete函数用于切换指定索引的事项的完成状态
-    function toggleComplete(index) {
-        //根据索引获取当前事项对象，并根据其完成状态取反，赋值给任务对象的 completed 属性
-        tasks[index].completed = !tasks[index].completed;
-        //调用saveTasks函数，将事项数组tasks保存到本地存储
+    // 切换任务重要状态，定义一个toggleImportant函数用于切换指定ID的事项的重要状态
+    function toggleImportant(id, isSearchResult = false) {
+    // 根据ID获取当前事项对象，并根据其重要状态取反，赋值给任务对象的 important 属性
+    const task = tasks.find(task => task.id === id);
+    if (task) {
+        task.important = !task.important;
+        // 调用saveTasks函数，将事项数组tasks保存到本地存储
         saveTasks();
-        //调用renderTasks函数，根据当前过滤条件渲染事项列表
-        renderTasks(currentFilter);
-        //调用updateCounts函数更新左侧事项数量计数
+        // 如果是搜索结果中的任务，重新渲染搜索结果
+        if (isSearchResult) {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(searchTerm));
+            renderSearchResults(filteredTasks);
+        } else {
+            // 调用renderTasks函数，根据当前过滤条件渲染事项列表
+            renderTasks(currentFilter);
+        }
+        // 调用updateCounts函数更新左侧事项数量计数
         updateCounts();
     }
-
-    // 切换任务重要状态，定义一个toggleImportant函数用于切换指定索引的事项的重要状态
-    function toggleImportant(index) {
-        //根据索引获取当前事项对象，并根据其重要状态取反，赋值给任务对象的 important 属性
-        tasks[index].important = !tasks[index].important;
-        //调用saveTasks函数，将事项数组tasks保存到本地存储
-        saveTasks();
-        //调用renderTasks函数，根据当前过滤条件渲染事项列表
-        renderTasks(currentFilter);
-        //调用updateCounts函数更新左侧事项数量计数
-        updateCounts();
-    }
+}
 
     // 保存事项到本地存储
     function saveTasks() {
@@ -263,18 +294,18 @@ document.addEventListener('DOMContentLoaded', function() {
             li.className = 'task-item';
             li.innerHTML = `
                 <div class="task-content">
-                    <i class="fa ${task.completed ? 'fa-toggle-on' : 'fa-toggle-off'} toggle-icon" data-index="${index}"></i>
+                    <i class="fa ${task.completed ? 'fa-toggle-on' : 'fa-toggle-off'} toggle-icon" data-id="${task.id}"></i>
                     <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
                 </div>
                 <div class="task-date">${task.date}</div>
                 <div class="task-actions">
-                    <button class="deleteButton">删除</button>
-                    <button class="importantButton ${task.important ? 'important' : 'not-important'}">重要</button>
+                    <button class="deleteButton" data-id="${task.id}">删除</button>
+                    <button class="importantButton ${task.important ? 'important' : 'not-important'}" data-id="${task.id}">重要</button>
                 </div>
             `;
-            li.querySelector('.toggle-icon').addEventListener('click', () => toggleComplete(index));
-            li.querySelector('.deleteButton').addEventListener('click', () => deleteTask(index));
-            li.querySelector('.importantButton').addEventListener('click', () => toggleImportant(index));
+            li.querySelector('.toggle-icon').addEventListener('click', () => toggleComplete(task.id,true));
+            li.querySelector('.deleteButton').addEventListener('click', () => deleteTask(task.id,true));
+            li.querySelector('.importantButton').addEventListener('click', () => toggleImportant(task.id,true));
             taskList.appendChild(li);
         });
         //移除所有左侧链接的选中状态
